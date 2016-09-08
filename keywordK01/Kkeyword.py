@@ -59,22 +59,26 @@ to_list = list()
 for a in range(0, len(on_list)):
     to_list.append(list(on_list[a])[0])
 
-# word_offset 는 딕셔너리로, 최빈단어를 키로, 단어 위치 리스트를 벨류로 가지고 있다.
+# word_offset 는 딕셔너리로, 최빈단어 '스트링'을 키로, 단어 위치 '리스트'를 벨류로 가지고 있다.
 word_offset = {}
-# word_var 는 딕셔너리로, 최빈단어를 키로, 그것의 위치의 분산을 벨류로 가지고 있다.
+# word_var 는 딕셔너리로, 최빈단어 '스트링'을 키로, 그것의 위치의 분산 '정수'를 벨류로 가지고 있다.
 word_var = {}
+
+
 
 for a in to_list:
     word_offset[a] = list()
     word_var[a] = 0
 
 
-for a in to_list:
-    c = 0
-    for b in res_ko:
-        if b==a:
-            word_offset[a].append(c)
-        c = c + 1
+#이 아래 부분은 스래드로 만들어서 문서 몇개로 잘라서 처리해도 되는 그런 부분으로 볼 수 있겠다.
+#이 아래 부분은 키워드 후보(상위n개빈출단어)의 오프셋을
+for findword in to_list:
+    offset = 0
+    for docword in res_ko:
+        if docword==word:
+            word_offset[findword].append(offset)
+        offset = offset + 1
 
 
 print("최빈단어 상위k개 리스트 : ")
@@ -87,6 +91,7 @@ wordtemp = 0
 
 for a in to_list:
     word_var[a] = numpy.var(word_offset[a])
+#분산 구하기
 print("최빈단어 분산 딕셔너리 " )
 print(word_var)
 
